@@ -1,24 +1,48 @@
 from src.main import add
-import pytest
 
-def test_add():
-  assert add(7, 2) == 9
-  assert add(5, "2", 3) == "error"
-  assert add("2", "8.2") == "error"
-  assert add("8", "1", 3.6) == 84
-  assert add("1", "2") == 12
-  assert add("3", "4", "5") == 39
-  assert add(2.6, "4", None) == "error"
-  assert add(2.5, 3, "5.1") == "error"
-  assert add(5.4, 9.8) == 15
-  assert add("1.4", "2", 3) == "error"
-  assert add(2.5, 3, "x") == "error"
-  assert add(2.1, 9.3, 3.7) == 14
-  assert add(1, 6, 3) == 10
-  assert add(1.6, 2.1) == 3
-  assert add(3.1, 2) == 5
-  assert add(1.9, 4.3, "2.6") == "error"
-  assert add("1", "2", 9) == 21
-  assert add("4", "2.4", 1) == "error"
-  assert add(None, 3, "5.1") == "error"
-  assert add("b", 4, 5) == "error"
+
+def test_add_success_int():
+    assert add(1, 2, 3) == 6
+
+
+def test_add_success_float():
+    assert add(1.5, 2.5, 3.0) == 7.0
+
+
+def test_add_success_default_c():
+    assert add(4, 5) == 9
+
+
+def test_type_check_string():
+    assert add("1", 2, 3) == -1
+
+
+def test_type_check_none():
+    assert add(None, 2, 3) == -1
+
+
+def test_type_check_bool():
+    # bool は Python では int のサブクラスだが、
+    # この仕様で bool を数値として扱うなら 3、
+    # 扱わないなら add 側で bool 除外ロジックを追加して -1 にする
+    assert add(True, 1, 1) == 3
+
+
+def test_boundary_lower_ok():
+    assert add(0, 0, 0) == 0
+
+
+def test_boundary_upper_ok():
+    assert add(10, 10, 10) == 30
+
+
+def test_boundary_a_below():
+    assert add(-0.1, 1, 1) == -2
+
+
+def test_boundary_b_above():
+    assert add(1, 10.1, 1) == -2
+
+
+def test_boundary_c_above():
+    assert add(1, 1, 11) == -2
